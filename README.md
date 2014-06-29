@@ -25,11 +25,7 @@ humans({
   header: 'Humans.txt',
   team: null,
   thanks: null,
-  site: {
-      standards: null,
-      components: null,
-      software: null
-  },
+  site: null,
   note: null,
   out: 'humans.txt',
   callback: null
