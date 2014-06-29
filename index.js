@@ -54,7 +54,7 @@
                 }
             };
 
-        figlet('Hayden Bleasel', function (err, data) {
+        figlet(options.header, function (err, data) {
             if (err) {
                 console.dir(err);
             } else {
