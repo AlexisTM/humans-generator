@@ -1,0 +1,30 @@
+{
+  "name": "humans-generator",
+  "version": "1.0.0",
+  "description": "Humans.txt generator for Node.js",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/haydenbleasel/humans-generator.git"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "humans",
+    "txt",
+    "generator",
+    "node",
+    "gulpfriendly"
+  ],
+  "author": "Hayden Bleasel <haydenbleasel@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/haydenbleasel/humans-generator/issues"
+  },
+  "homepage": "https://github.com/haydenbleasel/humans-generator",
+  "dependencies": {
+    "figlet": "^1.0.9",
+    "lodash.defaults": "^2.4.1"
+  }
+}
