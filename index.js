@@ -20,26 +20,28 @@
                 components: null,
                 software: null
             },
+            note: null,
             out: 'humans.txt',
             callback: null
         }),
             config = "",
-            i,
-            traverse = function (object) {
-                /*Object.keys(object).forEach(function (val) {
-                    if (Object.keys(object[val])) {
-                        config += val + ':';
-                        config += '\n\t' + traverse(val);
+            i = 0,
+            traverse = function (object, first) {
+                Object.keys(object).forEach(function (val) {
+                    if (typeof object[val] === 'string') {
+                        if (!first) {
+                            config += '\t';
+                        }
+                        config += val + ': ' + object[val] + '\n';
                     } else {
-                        config += '\n\t' + val + ': ' + object[val];
+                        config += val + ':' + '\n';
+                        traverse(object[val], false);
                     }
-                });*/
-
-                config += '\n';
+                });
             },
             add = function (name, object) {
                 if (object) {
-                    config += '/* ' + name + ' */\n';
+                    config += '\n/* ' + name + ' */\n';
                     if (typeof object === 'string') {
                         config += object + '\n';
                     } else if (Array.isArray(object)) {
@@ -47,9 +49,8 @@
                             config += object[i] + '\n';
                         }
                     } else {
-                        traverse(object);
+                        traverse(object, true);
                     }
-                    config += '\n';
                 }
             };
 
@@ -63,6 +64,7 @@
             add('TEAM', options.team);
             add('THANKS', options.thanks);
             add('SITE', options.site);
+            add('NOTE', options.note);
 
             fs.writeFile(options.out, config, function (err) {
                 if (err) {
