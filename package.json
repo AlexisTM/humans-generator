@@ -1,6 +1,6 @@
 {
   "name": "humans-generator",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Humans.txt generator for Node.js",
   "main": "index.js",
   "repository": {
