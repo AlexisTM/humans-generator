@@ -20,35 +20,37 @@
             out: 'humans.txt',
             callback: null
         }),
-            config = "",
-            i = 0,
-            traverse = function (object, first) {
-                Object.keys(object).forEach(function (val) {
-                    if (typeof object[val] === 'string') {
-                        if (!first) {
-                            config += '\t';
-                        }
-                        config += val + ': ' + object[val] + '\n';
-                    } else {
-                        config += val + ':' + '\n';
-                        traverse(object[val], false);
+            config = "";
+
+        function traverse(object, first) {
+            Object.keys(object).forEach(function (val) {
+                if (typeof object[val] === 'string') {
+                    if (!first) {
+                        config += '\t';
                     }
-                });
-            },
-            add = function (name, object) {
-                if (object) {
-                    config += '\n/* ' + name + ' */\n';
-                    if (typeof object === 'string') {
-                        config += object + '\n';
-                    } else if (Array.isArray(object)) {
-                        for (i = 0; i < object.length; i += 1) {
-                            config += object[i] + '\n';
-                        }
-                    } else {
-                        traverse(object, true);
-                    }
+                    config += val + ': ' + object[val] + '\n';
+                } else {
+                    config += val + ':' + '\n';
+                    traverse(object[val], false);
                 }
-            };
+            });
+        }
+
+        function add(name, object) {
+            var i;
+            if (object) {
+                config += '\n/* ' + name + ' */\n';
+                if (typeof object === 'string') {
+                    config += object + '\n';
+                } else if (Array.isArray(object)) {
+                    for (i = 0; i < object.length; i += 1) {
+                        config += object[i] + '\n';
+                    }
+                } else {
+                    traverse(object, true);
+                }
+            }
+        }
 
         figlet(options.header, function (err, data) {
             if (err) {
@@ -63,13 +65,8 @@
             add('NOTE', options.note);
 
             fs.writeFile(options.out, config, function (err) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    console.log('Generated humans.txt');
-                }
                 if (options.callback) {
-                    return options.callback();
+                    return options.callback(err, 'Generated humans.txt');
                 }
             });
 
