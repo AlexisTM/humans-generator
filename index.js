@@ -7,7 +7,9 @@
 
     var fs = require('fs'),
         defaults = require('lodash.defaults'),
-        figlet = require('figlet');
+        path = require('path'),
+        figlet = require('figlet'),
+        mkdirp = require('mkdirp');
 
     module.exports = function (params) {
 
@@ -53,21 +55,31 @@
         }
 
         figlet(options.header, function (err, data) {
+            var output = path.normalize(options.out),
+                directory = path.dirname(output);
+
             if (err) {
-                console.dir(err);
-            } else {
-                config += data + '\n\n';
+                throw err;
             }
+
+            config += data + '\n\n';
 
             add('TEAM', options.team);
             add('THANKS', options.thanks);
             add('SITE', options.site);
             add('NOTE', options.note);
 
-            fs.writeFile(options.out, config, function (err) {
-                if (options.callback) {
-                    return options.callback(err, 'Generated humans.txt');
+            mkdirp(directory, function (err) {
+                if (err) {
+                    throw err;
                 }
+
+                fs.writeFile(output, config, function (err) {
+                    if (options.callback) {
+                        return options.callback(err, 'Generated humans.txt');
+                    }
+                });
+
             });
 
         });
