@@ -59,7 +59,8 @@
                 directory = path.dirname(output);
 
             if (err) {
-                throw err;
+                console.log(err);
+                return;
             }
 
             config += data + '\n\n';
@@ -71,7 +72,8 @@
 
             mkdirp(directory, function (err) {
                 if (err) {
-                    throw err;
+                    console.log(err);
+                    return;
                 }
 
                 fs.writeFile(output, config, function (err) {
