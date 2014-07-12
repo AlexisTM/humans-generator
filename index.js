@@ -1,4 +1,4 @@
-/*jslint devel:true*/
+/*jslint devel:true, stupid:true*/
 /*global module, require*/
 
 (function () {
@@ -9,6 +9,7 @@
         defaults = require('lodash.defaults'),
         path = require('path'),
         figlet = require('figlet'),
+        cheerio = require('cheerio'),
         mkdirp = require('mkdirp');
 
     module.exports = function (params) {
@@ -54,6 +55,25 @@
             }
         }
 
+        function writeTags(callback) {
+            var $, html = '', tag = '<meta name="author" rel="' + options.out + '" />';
+            if (options.html && fs.existsSync(options.html)) {
+                $ = cheerio.load(fs.readFileSync(options.html));
+                $('link[rel="author"]').remove();
+                html = $.html().replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g, '').replace(/\s+/g, ' ');
+                if (html === '') {
+                    $ = cheerio.load('');
+                }
+                if ($('head').length > 0) {
+                    $("head").append(tag);
+                } else {
+                    return console.log("HTML has no <head>.");
+                }
+                return callback($.html());
+            }
+            return callback(tag);
+        }
+
         figlet(options.header, function (err, data) {
             var output = path.normalize(options.out),
                 directory = path.dirname(output);
@@ -77,9 +97,21 @@
                 }
 
                 fs.writeFile(output, config, function (err) {
-                    if (options.callback) {
-                        return options.callback(err, 'Generated humans.txt');
+                    if (err) {
+                        return console.log(err);
                     }
+                    writeTags(function (data) {
+                        if (options.html && options.html !== '') {
+                            fs.writeFile(options.html, data, function (err) {
+                                if (err) {
+                                    return console.log(err);
+                                }
+                            });
+                        }
+                        if (options.callback) {
+                            return options.callback(err, 'Generated humans.txt', data);
+                        }
+                    });
                 });
 
             });
