@@ -25,7 +25,7 @@
         }),
             config = "",
             directory = path.normalize(options.out),
-            file = directory + '/humans.txt';
+            file = 'humans.txt';
 
         function traverse(object, first) {
             Object.keys(object).forEach(function (val) {
@@ -96,7 +96,7 @@
                     return;
                 }
 
-                fs.writeFile(file, config, function (err) {
+                fs.writeFile(directory + '/' + file, config, function (err) {
                     if (err) {
                         return console.log(err);
                     }
