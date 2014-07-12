@@ -13,7 +13,7 @@ Simply require the module and execute it with an optional array of configuration
 - Thanks: People you'd like to thank.
 - Site: Details about the site (standards, components and software);
 - Note: A small note to add at the end.
-- Out: The destination path and filename.
+- Out: The destination path.
 - Callback: Function to execute upon completion (parameters are 'error', 'response' and 'data').
 
 Team, Thanks, Site and Note can be a String, Array or Hash. Defaults are shown below:
@@ -27,7 +27,7 @@ humans({
   thanks: null,
   site: null,
   note: null,
-  out: 'humans.txt',
+  out: 'dist',
   callback: null
 });
 ```

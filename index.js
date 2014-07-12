@@ -20,10 +20,12 @@
             thanks: null,
             site: null,
             note: null,
-            out: 'humans.txt',
+            out: 'dist',
             callback: null
         }),
-            config = "";
+            config = "",
+            directory = path.normalize(options.out),
+            file = directory + '/humans.txt';
 
         function traverse(object, first) {
             Object.keys(object).forEach(function (val) {
@@ -56,7 +58,7 @@
         }
 
         function writeTags(callback) {
-            var $, html = '', tag = '<meta name="author" rel="' + options.out + '" />';
+            var $, html = '', tag = '<meta name="author" rel="' + file + '" />';
             if (options.html && fs.existsSync(options.html)) {
                 $ = cheerio.load(fs.readFileSync(options.html));
                 $('link[rel="author"]').remove();
@@ -75,8 +77,6 @@
         }
 
         figlet(options.header, function (err, data) {
-            var output = path.normalize(options.out),
-                directory = path.dirname(output);
 
             if (err) {
                 console.log(err);
@@ -96,7 +96,7 @@
                     return;
                 }
 
-                fs.writeFile(output, config, function (err) {
+                fs.writeFile(file, config, function (err) {
                     if (err) {
                         return console.log(err);
                     }
