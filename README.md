@@ -14,7 +14,7 @@ Simply require the module and execute it with an optional array of configuration
 - Site: Details about the site (standards, components and software);
 - Note: A small note to add at the end.
 - Out: The destination path and filename.
-- Callback: Function to execute upon completion (parameters are 'error' and 'response').
+- Callback: Function to execute upon completion (parameters are 'error', 'response' and 'data').
 
 Team, Thanks, Site and Note can be a String, Array or Hash. Defaults are shown below:
 
