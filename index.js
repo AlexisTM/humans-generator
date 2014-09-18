@@ -58,7 +58,7 @@
         }
 
         function writeTags(callback) {
-            var $, html = '', tag = '<meta name="author" rel="' + file + '" />';
+            var $, html = '', tag = '<link rel="author" href="' + file + '" />';
             if (options.html && fs.existsSync(options.html)) {
                 $ = cheerio.load(fs.readFileSync(options.html));
                 $('link[rel="author"]').remove();
