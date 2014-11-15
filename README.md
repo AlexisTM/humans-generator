@@ -1,4 +1,4 @@
-# Humans Generator [![Build Status](https://travis-ci.org/haydenbleasel/humans-generator.svg?branch=master)](https://travis-ci.org/haydenbleasel/humans-generator)
+# Humans Generator [![Build Status](https://travis-ci.org/haydenbleasel/humans-generator.svg?branch=node)](https://travis-ci.org/haydenbleasel/humans-generator)
 
 Humans.txt generator for Node.js. Produces a simple, valid humans.txt for you and your team. Installed through NPM with:
 
@@ -13,8 +13,9 @@ Simply require the module and execute it with an optional array of configuration
 - Thanks: People you'd like to thank.
 - Site: Details about the site (standards, components and software);
 - Note: A small note to add at the end.
+- HTML: Optional file to write metadata link to.
 - Out: The destination path.
-- Callback: Function to execute upon completion (parameters are 'error', 'response' and 'data').
+- Callback: Function to execute upon completion (parameters are 'error', 'data' and 'html').
 
 Team, Thanks, Site and Note can be a String, Array or Hash. Defaults are shown below:
 
@@ -22,13 +23,14 @@ Team, Thanks, Site and Note can be a String, Array or Hash. Defaults are shown b
 var humans = require('humans-generator');
 
 humans({
-  header: 'Humans.txt',
-  team: null,
-  thanks: null,
-  site: null,
-  note: null,
-  out: 'dist',
-  callback: null
+    header: 'Humans.txt',
+    team: null,
+    thanks: null,
+    site: null,
+    note: null,
+    html: null,
+    out: null,
+    callback: null
 });
 ```
 
