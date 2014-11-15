@@ -60,6 +60,7 @@
                 source: options.html,
                 add: '<link rel="author" href="' + file + '" />',
                 remove: 'link[rel="author"]',
+                out: options.out,
                 callback: function (error, html) {
                     if (error) {
                         throw error;
@@ -77,10 +78,23 @@
             },
             function (data, callback) {
                 config.push(data + '\n');
-                add('TEAM', options.team);
-                add('THANKS', options.thanks);
-                add('SITE', options.site);
-                add('NOTE', options.note);
+
+                if (options.team) {
+                    add('TEAM', options.team);
+                }
+
+                if (options.thanks) {
+                    add('THANKS', options.thanks);
+                }
+
+                if (options.site) {
+                    add('SITE', options.site);
+                }
+
+                if (options.note) {
+                    add('NOTE', options.note);
+                }
+
                 callback(null);
             },
             function (callback) {
