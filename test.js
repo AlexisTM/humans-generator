@@ -15,5 +15,12 @@ humans({
         'Components': 'jQuery, Normalize.css',
         'Software': 'Atom'
     },
-    note: 'Built with love by Hayden Bleasel.'
+    note: 'Built with love by Hayden Bleasel.',
+    html: 'test/index.html',
+    out: 'test/humans.txt',
+    callback: function (error, data, html) {
+        console.log(error);
+        console.log(data);
+        console.log(html);
+    }
 });

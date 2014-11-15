@@ -1,121 +1,127 @@
-/*jslint devel:true, stupid:true*/
-/*global module, require*/
+/*jslint node:true, nomen:true*/
 
 (function () {
 
     'use strict';
 
     var fs = require('fs'),
-        defaults = require('lodash.defaults'),
         path = require('path'),
         figlet = require('figlet'),
         cheerio = require('cheerio'),
+        _ = require('underscore'),
+        async = require('async'),
         mkdirp = require('mkdirp');
 
     module.exports = function (params) {
 
-        var options = defaults(params || {}, {
+        var options = _.defaults(params || {}, {
             header: 'Humans.txt',
             team: null,
             thanks: null,
             site: null,
             note: null,
-            out: 'dist',
+            html: null,
+            out: null,
             callback: null
         }),
-            config = "",
-            directory = path.normalize(options.out),
+            config = [],
             file = 'humans.txt';
 
         function traverse(object, first) {
-            Object.keys(object).forEach(function (val) {
+            _.each(Object.keys(object), function (val) {
+                var indent = "";
                 if (typeof object[val] === 'string') {
                     if (!first) {
-                        config += '\t';
+                        indent += '\t';
                     }
-                    config += val + ': ' + object[val] + '\n';
+                    config.push(indent + val + ': ' + object[val]);
                 } else {
-                    config += val + ':' + '\n';
+                    config.push(val + ':');
                     traverse(object[val], false);
                 }
             });
         }
 
         function add(name, object) {
-            var i;
-            if (object) {
-                config += '\n/* ' + name + ' */\n';
-                if (typeof object === 'string') {
-                    config += object + '\n';
-                } else if (Array.isArray(object)) {
-                    for (i = 0; i < object.length; i += 1) {
-                        config += object[i] + '\n';
-                    }
-                } else {
-                    traverse(object, true);
-                }
+            config.push('\n/* ' + name + ' */');
+            if (typeof object === 'string') {
+                config.push(object);
+            } else if (Array.isArray(object)) {
+                _.each(object, function (obj) {
+                    config.push(obj);
+                });
+            } else {
+                traverse(object, true);
             }
         }
 
         function writeTags(callback) {
-            var $, html = '', tag = '<link rel="author" href="' + file + '" />';
-            if (options.html && fs.existsSync(options.html)) {
-                $ = cheerio.load(fs.readFileSync(options.html));
-                $('link[rel="author"]').remove();
-                html = $.html().replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g, '').replace(/\s+/g, ' ');
-                if (html === '') {
-                    $ = cheerio.load('');
-                }
-                if ($('head').length > 0) {
-                    $("head").append(tag);
-                } else {
-                    return console.log("HTML has no <head>.");
-                }
-                return callback($.html());
+            var $, tag = '<link rel="author" href="' + file + '" />';
+            if (options.html) {
+                fs.readFile(options.html, function (error, data) {
+                    if (error) {
+                        throw error;
+                    }
+                    $ = cheerio.load(data);
+                    if ($('head').length > 0) {
+                        $('head').append(tag);
+                        return callback($.html(), tag);
+                    }
+                    return callback(null, tag);
+                });
+            } else {
+                return callback(null, tag);
             }
-            return callback(tag);
         }
 
-        figlet(options.header, function (err, data) {
-
-            if (err) {
-                console.log(err);
-                return;
-            }
-
-            config += data + '\n\n';
-
-            add('TEAM', options.team);
-            add('THANKS', options.thanks);
-            add('SITE', options.site);
-            add('NOTE', options.note);
-
-            mkdirp(directory, function (err) {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-
-                fs.writeFile(directory + '/' + file, config, function (err) {
-                    if (err) {
-                        return console.log(err);
-                    }
-                    writeTags(function (data) {
-                        if (options.html && options.html !== '') {
-                            fs.writeFile(options.html, data, function (err) {
-                                if (err) {
-                                    return console.log(err);
-                                }
-                            });
-                        }
-                        if (options.callback) {
-                            return options.callback(err, 'Generated humans.txt', data);
-                        }
-                    });
+        async.waterfall([
+            function (callback) {
+                figlet(options.header, function (error, data) {
+                    callback(error, data);
                 });
-
-            });
-
+            },
+            function (data, callback) {
+                config.push(data + '\n');
+                add('TEAM', options.team);
+                add('THANKS', options.thanks);
+                add('SITE', options.site);
+                add('NOTE', options.note);
+                callback(null, data);
+            },
+            function (data, callback) {
+                if (options.out) {
+                    mkdirp(path.dirname(options.out), function (error) {
+                        callback(error, data);
+                    });
+                } else {
+                    callback(null, data);
+                }
+            },
+            function (data, callback) {
+                if (options.out) {
+                    fs.writeFile(options.out, config.join('\n'), function (error) {
+                        callback(error, config.join('\n'));
+                    });
+                } else {
+                    callback(null, config.join('\n'));
+                }
+            },
+            function (data, callback) {
+                writeTags(function (html, tag) {
+                    if (options.html && options.html !== '') {
+                        fs.writeFile(options.html, html, function (error) {
+                            callback(error, data, tag);
+                        });
+                    } else {
+                        callback(null, data, tag);
+                    }
+                });
+            }
+        ], function (error, data, html) {
+            if (options.callback) {
+                return options.callback(error, data, html);
+            }
+            return;
         });
 
     };
