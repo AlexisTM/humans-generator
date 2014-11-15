@@ -7,9 +7,9 @@
     var fs = require('fs'),
         path = require('path'),
         figlet = require('figlet'),
-        cheerio = require('cheerio'),
         _ = require('underscore'),
         async = require('async'),
+        metaparser = require('metaparser'),
         mkdirp = require('mkdirp');
 
     module.exports = function (params) {
@@ -56,22 +56,17 @@
         }
 
         function writeTags(callback) {
-            var $, tag = '<link rel="author" href="' + file + '" />';
-            if (options.html) {
-                fs.readFile(options.html, function (error, data) {
+            metaparser({
+                source: options.html,
+                add: '<link rel="author" href="' + file + '" />',
+                remove: 'link[rel="author"]',
+                callback: function (error, html) {
                     if (error) {
                         throw error;
                     }
-                    $ = cheerio.load(data);
-                    if ($('head').length > 0) {
-                        $('head').append(tag);
-                        return callback($.html(), tag);
-                    }
-                    return callback(null, tag);
-                });
-            } else {
-                return callback(null, tag);
-            }
+                    return callback(html);
+                }
+            });
         }
 
         async.waterfall([
@@ -86,18 +81,18 @@
                 add('THANKS', options.thanks);
                 add('SITE', options.site);
                 add('NOTE', options.note);
-                callback(null, data);
+                callback(null);
             },
-            function (data, callback) {
+            function (callback) {
                 if (options.out) {
                     mkdirp(path.dirname(options.out), function (error) {
-                        callback(error, data);
+                        callback(error);
                     });
                 } else {
-                    callback(null, data);
+                    callback(null);
                 }
             },
-            function (data, callback) {
+            function (callback) {
                 if (options.out) {
                     fs.writeFile(options.out, config.join('\n'), function (error) {
                         callback(error, config.join('\n'));
@@ -106,20 +101,20 @@
                     callback(null, config.join('\n'));
                 }
             },
-            function (data, callback) {
+            function (config, callback) {
                 writeTags(function (html, tag) {
                     if (options.html && options.html !== '') {
                         fs.writeFile(options.html, html, function (error) {
-                            callback(error, data, tag);
+                            callback(error, config, tag);
                         });
                     } else {
-                        callback(null, data, tag);
+                        callback(null, config, tag);
                     }
                 });
             }
-        ], function (error, data, html) {
+        ], function (error, config, html) {
             if (options.callback) {
-                return options.callback(error, data, html);
+                return options.callback(error, config, html);
             }
             return;
         });
