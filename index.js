@@ -25,7 +25,8 @@
             callback: null
         }),
             config = [],
-            file = 'humans.txt';
+            file = 'humans.txt',
+            tag = '<link rel="author" href="' + file + '" />';
 
         function traverse(object, first) {
             _.each(Object.keys(object), function (val) {
@@ -58,7 +59,7 @@
         function writeTags(callback) {
             metaparser({
                 source: options.html,
-                add: '<link rel="author" href="' + file + '" />',
+                add: tag,
                 remove: 'link[rel="author"]',
                 out: options.out,
                 callback: function (error, html) {
@@ -116,15 +117,15 @@
                 }
             },
             function (config, callback) {
-                writeTags(function (html, tag) {
-                    if (options.html && options.html !== '') {
+                if (options.html && options.html !== '') {
+                    writeTags(function (html) {
                         fs.writeFile(options.html, html, function (error) {
                             callback(error, config, tag);
                         });
-                    } else {
-                        callback(null, config, tag);
-                    }
-                });
+                    });
+                } else {
+                    callback(null, config, tag);
+                }
             }
         ], function (error, config, html) {
             if (options.callback) {
