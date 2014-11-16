@@ -120,7 +120,7 @@
                 if (options.html && options.html !== '') {
                     writeTags(function (html) {
                         fs.writeFile(options.html, html, function (error) {
-                            callback(error, config, tag);
+                            callback(error, config, html);
                         });
                     });
                 } else {
