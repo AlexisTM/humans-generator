@@ -61,7 +61,7 @@
                 source: options.html,
                 add: tag,
                 remove: 'link[rel="author"]',
-                out: options.out,
+                out: options.html,
                 callback: function (error, html) {
                     if (error) {
                         throw error;
