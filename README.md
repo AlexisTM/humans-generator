@@ -1,4 +1,4 @@
-# Humans Generator [![Build Status](https://travis-ci.org/haydenbleasel/humans-generator.svg?branch=node)](https://travis-ci.org/haydenbleasel/humans-generator)
+# Humans Generator [![Build Status](https://travis-ci.org/haydenbleasel/humans-generator.svg?branch=master)](https://travis-ci.org/haydenbleasel/humans-generator)
 
 Humans.txt generator for Node.js. Produces a simple, valid humans.txt for you and your team. Installed through NPM with:
 
