@@ -2,7 +2,7 @@
 
 Humans.txt generator for Node.js. Produces a simple, valid humans.txt for you and your team. Installed through NPM with:
 
-```
+```shell
 npm install humans-generator --save-dev
 ```
 
@@ -19,9 +19,8 @@ Simply require the module and execute it with an optional array of configuration
 
 Team, Thanks, Site and Note can be a String, Array or Hash. Defaults are shown below:
 
-```
+```js
 var humans = require('humans-generator');
-
 humans({
     header: 'Humans.txt',
     team: null,
@@ -36,24 +35,24 @@ humans({
 
 Example usage (multi-dimensional hash, array, hash and string):
 
-```
+```json
 humans({
-    'team': {
-        'Hayden Bleasel': {
-            'Twitter': '@haydenbleasel',
-            'Email': 'haydenbleasel@gmail.com',
-            'Country': 'Australia'
+    "team": {
+        "Hayden Bleasel": {
+            "Twitter": "@haydenbleasel",
+            "Email": "haydenbleasel@gmail.com",
+            "Country": "Australia"
         }
     },
-    'thanks': [
-        'Hayden Bleasel (@haydenbleasel on Twitter) <haydenbleasel@gmail.com>'
+    "thanks": [
+        "Hayden Bleasel (@haydenbleasel on Twitter) <haydenbleasel@gmail.com>"
     ],
-    'site': {
-        'Standards': 'HTML5, CSS3',
-        'Components': 'jQuery, Normalize.css',
-        'Software': 'Atom'
+    "site": {
+        "Standards": "HTML5, CSS3",
+        "Components": "jQuery, Normalize.css",
+        "Software": "Atom"
     },
-    'note': 'Built with love by Hayden Bleasel.'
+    "note": "Built with love by Hayden Bleasel."
 });
 ```
 
