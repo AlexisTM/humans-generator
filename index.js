@@ -30,7 +30,7 @@
 
         function traverse(object, first) {
             _.each(Object.keys(object), function (val) {
-                var indent = "";
+                var indent = '';
                 if (typeof object[val] === 'string') {
                     if (!first) {
                         indent += '\t';
@@ -41,16 +41,19 @@
                     traverse(object[val], false);
                 }
             });
+            config.push('');
         }
 
         function add(name, object) {
-            config.push('\n/* ' + name + ' */');
+            config.push('/* ' + name + ' */');
             if (typeof object === 'string') {
                 config.push(object);
+                config.push('\n');
             } else if (Array.isArray(object)) {
                 _.each(object, function (obj) {
                     config.push(obj);
                 });
+                config.push('\n');
             } else {
                 traverse(object, true);
             }
