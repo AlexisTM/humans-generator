@@ -8,8 +8,8 @@
         path = require('path'),
         figlet = require('figlet'),
         _ = require('underscore'),
+        cheerio = require('cheerio'),
         async = require('async'),
-        metaparser = require('metaparser'),
         mkdirp = require('mkdirp');
 
     module.exports = function (params) {
@@ -60,17 +60,22 @@
         }
 
         function writeTags(callback) {
-            metaparser({
-                source: options.html,
-                add: tag,
-                remove: 'link[rel="author"]',
-                out: options.html,
-                callback: function (error, html) {
-                    if (error) {
-                        throw error;
-                    }
-                    return callback(html);
+            async.waterfall([
+                function (callback) {
+                    fs.readFile(options.html, { encoding: 'utf8' }, function (error, data) {
+                        callback(error, data);
+                    });
+                },
+                function (data, callback) {
+                    var $ = cheerio.load(data, { decodeEntities: false }),
+                        target = $('head').length > 0 ? $('head') : $.root();
+                    $('link[rel="author"]').remove();
+                    target.append(tag);
+                    console.log($.html(), 'html');
+                    callback(null, $.html());
                 }
+            ], function (error, html) {
+                return callback(error, html.replace(/^\s*[\r\n]/gm, ''));
             });
         }
 
@@ -121,9 +126,9 @@
             },
             function (config, callback) {
                 if (options.html && options.html !== '') {
-                    writeTags(function (html) {
+                    writeTags(function (error2, html) {
                         fs.writeFile(options.html, html, function (error) {
-                            callback(error, config, html);
+                            callback(error || error2, config, html);
                         });
                     });
                 } else {
