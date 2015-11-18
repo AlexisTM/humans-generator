@@ -71,7 +71,6 @@
                         target = $('head').length > 0 ? $('head') : $.root();
                     $('link[rel="author"]').remove();
                     target.append(tag);
-                    console.log($.html(), 'html');
                     callback(null, $.html());
                 }
             ], function (error, html) {
