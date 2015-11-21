@@ -8,7 +8,7 @@
     "url": "https://github.com/haydenbleasel/humans-generator.git"
   },
   "scripts": {
-    "test": "node test.js"
+    "test": "cd test && node test.js"
   },
   "keywords": [
     "humans",
@@ -28,5 +28,9 @@
     "figlet": "*",
     "mkdirp": "*",
     "underscore": "*"
+  },
+  "devDependencies": {
+    "eslint": "*",
+    "gulp": "*"
   }
 }

@@ -1,4 +1,4 @@
-var humans = require('./index.js');
+var humans = require('../');
 humans({
     team: {
         'Hayden Bleasel': {
@@ -16,8 +16,8 @@ humans({
         'Software': 'Atom'
     },
     note: 'Built with love by Hayden Bleasel.',
-    html: 'test/index.html',
-    out: 'test/humans.txt',
+    html: 'index.html',
+    out: 'humans.txt',
     callback: function (error, data, html) {
         console.log(error);
         console.log(data);
