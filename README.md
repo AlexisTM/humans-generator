@@ -1,6 +1,6 @@
 # Humans Generator [![Build Status](https://travis-ci.org/haydenbleasel/humans-generator.svg?branch=master)](https://travis-ci.org/haydenbleasel/humans-generator)
 
-Humans.txt generator for Node.js. Produces a simple, valid humans.txt for you and your team. Installed through NPM with:
+Produces a simple, valid humans.txt to be parsed by web crawlers. Adheres to the [specification](http://humanstxt.org/Standard.html) provided by Humanstxt.org. Requires Node 4+. Installed through NPM with:
 
 ```shell
 npm install humans-generator --save-dev
@@ -8,58 +8,65 @@ npm install humans-generator --save-dev
 
 Simply require the module and execute it with an optional array of configuration.
 
-- Header: Your website's title to be converted to ASCII art!
-- Team: Details about you and your team.
-- Thanks: People you'd like to thank.
-- Site: Details about the site (standards, components and software);
-- Note: A small note to add at the end.
-- HTML: Optional file to write metadata link to.
-- Out: The destination path.
-- Callback: Function to execute upon completion (parameters are 'error', 'data' and 'html').
-
-Team, Thanks, Site and Note can be a String, Array or Hash. Defaults are shown below:
+- Team: A string or array of shoutouts to your squad.
+- Thanks: A string or array of people you'd like to thank.
+- Site: A string or array of technical specifications about your site.
+- Note: A string or array of things you'd like to mention.
 
 ```js
 var humans = require('humans-generator');
-humans({
-    header: 'Humans.txt',
-    team: null,
-    thanks: null,
-    site: null,
-    note: null,
-    html: null,
-    out: null,
-    callback: null
-});
-```
 
-Example usage (multi-dimensional hash, array, hash and string):
-
-```json
 humans({
-    "team": {
-        "Hayden Bleasel": {
-            "Twitter": "@haydenbleasel",
-            "Email": "haydenbleasel@gmail.com",
-            "Country": "Australia"
-        }
-    },
-    "thanks": [
-        "Hayden Bleasel (@haydenbleasel on Twitter) <haydenbleasel@gmail.com>"
+    team: 'Hayden Bleasel (@haydenbleasel on Twitter)',
+    thanks: [
+        'Node (@nodejs on Twitter)',
+        'Gulp (@gulpjs on Twitter)'
     ],
-    "site": {
-        "Standards": "HTML5, CSS3",
-        "Components": "jQuery, Normalize.css",
-        "Software": "Atom"
-    },
-    "note": "Built with love by Hayden Bleasel."
+    site: [
+        'Standards: HTML5, CSS3',
+        'Components: jQuery, Normalize.css',
+        'Software: Atom'
+    ],
+    note: 'Built with love by Hayden Bleasel.'
+}, function (error, humans) {
+    // Join ('\n') and write this to a file
+    console.log(error, humans);
 });
 ```
 
-This will output the following Humans.txt file:
+If you're using Gulp, this module scans your HTML for `<meta name="author" />`. Example usage:
+
+```js
+var humans = require('humans-generator').stream;
+
+gulp.task('default', function () {
+    gulp.src('index.html')
+        .pipe(humans({
+            thanks: [
+                'Node (@nodejs on Twitter)',
+                'Gulp (@gulpjs on Twitter)'
+            ],
+            site: [
+                'Standards: HTML5, CSS3',
+                'Components: jQuery, Normalize.css',
+                'Software: Atom'
+            ],
+            note: 'Built with love by Hayden Bleasel.'
+        }))
+        .pipe(gulp.dest('dist/'));
+});
+```
+
+If you need an ES5 build for legacy purposes, just require the ES5 file:
+
+```js
+var humans = require('humans-generator/es5');
+```
+
+Outputs the following file:
 
 ```
- _   _                                  _        _
+_   _                                  _        _   
 | | | |_   _ _ __ ___   __ _ _ __  ___ | |___  _| |_
 | |_| | | | | '_ ` _ \ / _` | '_ \/ __|| __\ \/ / __|
 |  _  | |_| | | | | | | (_| | | | \__ \| |_ >  <| |_
@@ -67,13 +74,11 @@ This will output the following Humans.txt file:
 
 
 /* TEAM */
-Hayden Bleasel:
-Twitter: @haydenbleasel
-Email: haydenbleasel@gmail.com
-Country: Australia
+Hayden Bleasel (@haydenbleasel on Twitter)
 
 /* THANKS */
-Hayden Bleasel (@haydenbleasel on Twitter) <haydenbleasel@gmail.com>
+Node (@nodejs on Twitter)
+Gulp (@gulpjs on Twitter)
 
 /* SITE */
 Standards: HTML5, CSS3
@@ -82,4 +87,11 @@ Software: Atom
 
 /* NOTE */
 Built with love by Hayden Bleasel.
+```
+
+To build the ES5 version:
+
+```sh
+npm install -g babel-cli
+babel --presets es2015 index.js --out-file es5.js
 ```

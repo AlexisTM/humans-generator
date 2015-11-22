@@ -82,4 +82,4 @@ $RECYCLE.BIN/
 
 ### Custom ###
 test/humans.txt
-test/humans-stream.txt
+test/stream/
