@@ -70,7 +70,9 @@ const path = require('path'),
                 return callback(new Error('Streaming not supported'));
             }
 
-            params.team = $('meta[name="author"]').attr('content');
+            if (!params.team) {
+                params.team = $('meta[name="author"]').attr('content');
+            }
 
             humans(params, (error, config) =>
                 callback(error, new File({
