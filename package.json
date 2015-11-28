@@ -1,21 +1,20 @@
 {
-  "name": "humans-generator",
-  "version": "2.0.1",
-  "description": "Humans.txt generator for Node.js",
+  "name": "gulp-humans",
+  "version": "2.0.0",
+  "description": "Humans.txt generator for Gulp",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/haydenbleasel/humans-generator.git"
+    "url": "https://github.com/haydenbleasel/humans-generator.git#gulp"
   },
   "scripts": {
-    "test": "cd test && node test.js && gulp"
+    "test": "cd test && gulp"
   },
   "keywords": [
     "humans",
     "txt",
     "generator",
-    "node",
-    "gulpfriendly",
+    "gulp",
     "gulpplugin"
   ],
   "author": "Hayden Bleasel <haydenbleasel@gmail.com>",
@@ -23,18 +22,12 @@
   "bugs": {
     "url": "https://github.com/haydenbleasel/humans-generator/issues"
   },
-  "homepage": "https://github.com/haydenbleasel/humans-generator",
+  "homepage": "https://github.com/haydenbleasel/humans-generator#gulp",
   "dependencies": {
-    "async": "*",
-    "cheerio": "*",
-    "figlet": "*",
-    "through2": "*",
-    "underscore": "*",
-    "vinyl": "*"
+    "humans-generator": "*"
   },
   "devDependencies": {
     "babel-preset-es2015": "*",
-    "eslint": "*",
     "gulp": "*"
   }
 }

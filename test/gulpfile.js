@@ -1,5 +1,5 @@
 const gulp = require('gulp'),
-    humans = require('../').stream;
+    humans = require('../');
 
 (() => {
 
@@ -8,9 +8,17 @@ const gulp = require('gulp'),
     gulp.task('default', () =>
         gulp.src('index.html')
             .pipe(humans({
-                thanks: 'Hayden Bleasel (@haydenbleasel on Twitter)',
+                thanks: [
+                    'Node (@nodejs on Twitter)',
+                    'Gulp (@gulpjs on Twitter)'
+                ],
+                site: [
+                    'Standards: HTML5, CSS3',
+                    'Components: jQuery, Normalize.css',
+                    'Software: Atom'
+                ],
                 note: 'Built with love by Hayden Bleasel.'
             }))
-            .pipe(gulp.dest('stream/')));
+            .pipe(gulp.dest('./')));
 
 })();
