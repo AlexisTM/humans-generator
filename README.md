@@ -34,29 +34,6 @@ humans({
 });
 ```
 
-If you're using Gulp, this module scans your HTML for `<meta name="author" />`. Example usage:
-
-```js
-var humans = require('humans-generator').stream;
-
-gulp.task('default', function () {
-    gulp.src('index.html')
-        .pipe(humans({
-            thanks: [
-                'Node (@nodejs on Twitter)',
-                'Gulp (@gulpjs on Twitter)'
-            ],
-            site: [
-                'Standards: HTML5, CSS3',
-                'Components: jQuery, Normalize.css',
-                'Software: Atom'
-            ],
-            note: 'Built with love by Hayden Bleasel.'
-        }))
-        .pipe(gulp.dest('dist/'));
-});
-```
-
 If you need an ES5 build for legacy purposes, just require the ES5 file:
 
 ```js
