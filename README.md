@@ -6,7 +6,7 @@ Humans.txt generator for Gulp. Simple wrapper around [humans-generator](https://
 npm install gulp-humans --save-dev
 ```
 
-Check out humans-generator for example options. This module scans your HTML for `<link rel="sitemap" />`. Example usage:
+Check out humans-generator for example options. This module scans your HTML for `<meta name="author" />`. Example usage:
 
 ```js
 var humans = require('gulp-humans');
