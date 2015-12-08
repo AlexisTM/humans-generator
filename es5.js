@@ -1,6 +1,6 @@
 'use strict';
 
-var humans = require('humans-generator').stream;
+var humans = require('humans-generator/es5').stream;
 
 (function () {
     'use strict';

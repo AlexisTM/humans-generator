@@ -1,6 +1,6 @@
 {
   "name": "gulp-humans",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Humans.txt generator for Gulp",
   "main": "index.js",
   "repository": {

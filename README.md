@@ -34,3 +34,10 @@ If you need an ES5 build for legacy purposes, just require the ES5 file:
 ```js
 var humans = require('gulp-humans/es5');
 ```
+
+To build the ES5 version, run the following and remember to require the ES5 version.
+
+```js
+npm install -g babel-cli
+babel --presets es2015 index.js --out-file es5.js
+```
