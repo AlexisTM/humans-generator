@@ -1,4 +1,4 @@
-# Humans Generator [![Build Status](https://travis-ci.org/haydenbleasel/humans-generator.svg?branch=master)](https://travis-ci.org/haydenbleasel/humans-generator)
+# Humans Generator [![Build Status](https://travis-ci.org/AlexisTM/humans-generator.svg?branch=master)](https://travis-ci.org/AlexisTM/humans-generator)
 
 Produces a simple, valid humans.txt to be parsed by web crawlers. Adheres to the [specification](http://humanstxt.org/Standard.html) provided by Humanstxt.org. Requires Node 4+. Installed through NPM with:
 
@@ -13,11 +13,14 @@ Simply require the module and execute it with an optional array of configuration
 - Site: A string or array of technical specifications about your site.
 - Note: A string or array of things you'd like to mention.
 
-```js
+```javascript
 var humans = require('humans-generator');
 
 humans({
-    team: 'Hayden Bleasel (@haydenbleasel on Twitter)',
+    team: [
+        'Hayden Bleasel (@haydenbleasel on Twitter)',
+        'Alexis Paques (@AlexisTM on Github)'
+    ],
     thanks: [
         'Node (@nodejs on Twitter)',
         'Gulp (@gulpjs on Twitter)'
@@ -27,16 +30,17 @@ humans({
         'Components: jQuery, Normalize.css',
         'Software: Atom'
     ],
-    note: 'Built with love by Hayden Bleasel.'
+    note: 'Built with love by Hayden Bleasel. Maintained by Alexis Paques.'
 }, function (error, humans) {
     // Join ('\n') and write this to a file
-    console.log(error, humans);
+    if(error)  console.log(error);
+    else console.log(humans.join('\n'));
 });
 ```
 
 If you need an ES5 build for legacy purposes, just require the ES5 file:
 
-```js
+```javascript
 var humans = require('humans-generator/es5');
 ```
 
@@ -52,6 +56,7 @@ _   _                                  _        _
 
 /* TEAM */
 Hayden Bleasel (@haydenbleasel on Twitter)
+Alexis Paques (@AlexisTM on Github)
 
 /* THANKS */
 Node (@nodejs on Twitter)
@@ -63,7 +68,7 @@ Components: jQuery, Normalize.css
 Software: Atom
 
 /* NOTE */
-Built with love by Hayden Bleasel.
+Built with love by Hayden Bleasel. Maintained by Alexis Paques.
 ```
 
 To build the ES5 version:
