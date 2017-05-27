@@ -8,7 +8,7 @@
     "url": "https://github.com/AlexisTM/humans-generator.git"
   },
   "scripts": {
-    "test": "cd test && node test.js && gulp"
+    "test": "cd test && node test.js && node testes5.js && gulp"
   },
   "keywords": [
     "humans",

@@ -13,11 +13,7 @@ const path = require('path'),
     function humans (params, next) {
 
         const options = _.defaults(params || {}, {
-            header: 'Humans.txt',
-            team: null,
-            thanks: null,
-            site: null,
-            note: null
+            header: 'Humans.txt'
         }),
             configuration = [];
 
