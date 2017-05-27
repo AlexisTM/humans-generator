@@ -27,10 +27,20 @@ const path = require('path'),
 
         function add (name, object) {
             configuration.push(`\n/* ${ name } */`);
+            stringify(object, '', false)
+        }
+
+        function stringify(object, prepend, isNotFirst){
+            prepend = prepend || ''
             if (typeof object === 'string') {
-                configuration.push(object);
+                configuration.push(prepend + object)
             } else if (Array.isArray(object)) {
-                _.each(object, (obj) => configuration.push(obj));
+                _.each(object, (obj, index) => stringify(obj, '', index));//console.log(obj, b));//
+            } else if (object instanceof Object){
+                if (isNotFirst) configuration.push("")
+                _.each(object, (value, key) => {
+                    stringify(value, `${ key }: `, true)
+                })
             } else {
                 return next(new Error(`Object type for ${ name } is not a string or array.`));
             }
@@ -38,18 +48,21 @@ const path = require('path'),
 
         async.waterfall([
             (callback) =>
-                figlet(options.header, (error, data) =>
-                    callback(error, data)),
+                figlet(options.header, (error, data) => {
+                    callback(error, data)}),
             (data, callback) => {
+                console.log(options); 
                 configuration.push(`${ data }`);
-
-                _.each(['team', 'thanks', 'site', 'note'], (name) => {
+                _.each(Object.keys(options), (name) => {
+                    if (name != 'header')
                     if (options[name]) {
                         add(name.toUpperCase(), options[name]);
                     }
+                    
                 });
+                configuration.push("");
                 callback(null);
-            }
+            },
         ], (error) =>
             next(error, configuration));
     }

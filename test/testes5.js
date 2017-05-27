@@ -1,4 +1,4 @@
-const humans = require('../'),
+const humans = require('../es5'),
     fs = require('fs');
 
 (() => {

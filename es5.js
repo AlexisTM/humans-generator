@@ -1,6 +1,6 @@
 'use strict';
 
-var path = require('path'),
+const path = require('path'),
     figlet = require('figlet'),
     _ = require('underscore'),
     cheerio = require('cheerio'),
@@ -9,11 +9,12 @@ var path = require('path'),
     File = require('vinyl');
 
 (function () {
+
     'use strict';
 
-    function humans(params, next) {
+    function humans (params, next) {
 
-        var options = _.defaults(params || {}, {
+        const options = _.defaults(params || {}, {
             header: 'Humans.txt',
             team: null,
             thanks: null,
@@ -22,48 +23,61 @@ var path = require('path'),
         }),
             configuration = [];
 
-        next = next || function callback() {
+        next = next || function callback () {
             return true;
         };
 
-        function add(name, object) {
-            configuration.push('\n/* ' + name + ' */');
+        function add (name, object) {
+            configuration.push(`\n/* ${ name } */`);
+            stringify(object, '', false)
+        }
+
+        function stringify(object, prepend, isNotFirst){
+            prepend = prepend || ''
             if (typeof object === 'string') {
-                configuration.push(object);
+                configuration.push(prepend + object)
             } else if (Array.isArray(object)) {
-                _.each(object, function (obj) {
-                    return configuration.push(obj);
-                });
+                _.each(object, function(obj, index) { stringify(obj, '', index)}); //console.log(obj, b));//
+            } else if (object instanceof Object){
+                if (isNotFirst) configuration.push("")
+                _.each(object, function(value, key) {
+                    stringify(value, `${ key }: `, true)
+                })
             } else {
-                return next(new Error('Object type for ' + name + ' is not a string or array.'));
+                return next(new Error(`Object type for ${ name } is not a string, an array nor an Object.`));
             }
         }
 
-        async.waterfall([function (callback) {
-            return figlet(options.header, function (error, data) {
-                return callback(error, data);
-            });
-        }, function (data, callback) {
-            configuration.push('' + data);
-
-            _.each(['team', 'thanks', 'site', 'note'], function (name) {
-                if (options[name]) {
-                    add(name.toUpperCase(), options[name]);
-                }
-            });
-            callback(null);
-        }], function (error) {
-            return next(error, configuration);
-        });
+        async.waterfall([
+            function (callback) {
+                figlet(options.header, function(error, data) {
+                    callback(error, data)})
+            },
+            function (data, callback) {
+                console.log(options); 
+                configuration.push(`${ data }`);
+                _.each(Object.keys(options), function(name) {
+                    if (name != 'header')
+                    if (options[name]) {
+                        add(name.toUpperCase(), options[name]);
+                    }
+                    
+                });
+                configuration.push("");
+                callback(null);
+            },
+        ], function(error){
+				next(error, configuration)
+    		});
     }
 
-    function stream(params) {
+    function stream (params) {
 
         params = params || {};
 
         return through2.obj(function (file, enc, callback) {
 
-            var $ = cheerio.load(file.contents.toString());
+            const $ = cheerio.load(file.contents.toString());
 
             if (file.isNull()) {
                 return callback(null, file);
@@ -77,15 +91,17 @@ var path = require('path'),
                 params.team = $('meta[name="author"]').attr('content');
             }
 
-            humans(params, function (error, config) {
-                return callback(error, new File({
+            humans(params, function(error, config){                 
+            		callback(error, new File({
                     path: path.join(file.cwd, 'humans.txt'),
                     contents: new Buffer(config.join('\n'))
-                }));
-            });
+                }))});
+
         });
+
     }
 
     module.exports = humans;
     module.exports.stream = stream;
+
 })();
