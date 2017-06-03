@@ -35,7 +35,7 @@ var path = require('path'),
             } else if (Array.isArray(object)) {
                 _.each(object, function (obj, index) {
                     return stringify(obj, '', index);
-                }); //console.log(obj, b));//
+                });
             } else if (object instanceof Object) {
                 if (isNotFirst) configuration.push("");
                 _.each(object, function (value, key) {

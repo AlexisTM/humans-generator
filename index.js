@@ -31,7 +31,7 @@ const path = require('path'),
             if (typeof object === 'string') {
                 configuration.push(prepend + object)
             } else if (Array.isArray(object)) {
-                _.each(object, (obj, index) => stringify(obj, '', index));//console.log(obj, b));//
+                _.each(object, (obj, index) => stringify(obj, '', index));
             } else if (object instanceof Object){
                 if (isNotFirst) configuration.push("")
                 _.each(object, (value, key) => {
