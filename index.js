@@ -47,7 +47,6 @@ const path = require('path'),
                 figlet(options.header, (error, data) => {
                     callback(error, data)}),
             (data, callback) => {
-                console.log(options); 
                 configuration.push(`${ data }`);
                 _.each(Object.keys(options), (name) => {
                     if (name != 'header')

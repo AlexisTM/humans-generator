@@ -51,7 +51,6 @@ var path = require('path'),
                 callback(error, data);
             });
         }, function (data, callback) {
-            console.log(options);
             configuration.push('' + data);
             _.each(Object.keys(options), function (name) {
                 if (name != 'header') if (options[name]) {
